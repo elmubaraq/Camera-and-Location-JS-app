@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> 
+    <link rel="stylesheet" href="{{url_for('static',filename = 'style.css')}}">
+    
+</head>
+<style>
+
+    canvas{
+        width: 250px;
+        height: 250px;
+        display: flex;
+        align-content: center;
+        border: 2px solid blueviolet;
+        margin: 0 auto;
+        border-radius: 10px;
+        backgroung-image:
+        }
+    div video{
+        width: 250px;
+        height: 250px;
+        display: flex;
+        border: 2px solid blueviolet;
+        margin: 0 auto;
+        border-radius: 10px;
+        }
+    div button{margin: 0 auto;
+            display: flex;}
+    
+
+    
+</style>
+<body>
+<!--Stream video via Webcam-->
+<div class="video-wrap">
+    <video id="video" playsinline autoplay width="400" ></video>
+</div>
+<!--Trigger canvas webcam-->
+<div class="controller">
+    <button id="snap" onclick="getLocation()">Capture</button>
+</div>
+<!--triger canvas web API-->
+<canvas id="canvas" width="640" height="480"></canvas>
+<div><p id="demo"></p></div>
+    
+
+<script>
+    'use strict';
+const video= document.getElementById('video');
+const canvas= document.getElementById('canvas');
+const snap= document.getElementById('snap');
+const errorMsgElement= document.getElementById('span#ErrorMsg');
+const constraints= {
+    audio:true,
+    video:{
+        width: 250, height: 250
+      }
+
+    };
+async function init(){
+    try{
+        const stream= await navigator.mediaDevices.getUserMedia(constraints);
+        handleSuccess(stream);
+ 
+    }
+    catch(e){
+        errorMsgElement.innerHTML= `navigator.getUserMedia.error:${e.toString()}`;
+    }
+
+
+}
+//success
+function handleSuccess(stream){
+    window.stream= stream;
+    video.srcObject= stream;}
+    //load init
+    init();
+    //draw image
+    var context= canvas.getContext('2d');
+    snap.addEventListener("click", function(){
+        context.drawImage(video,0,0,640,490);
+    });
+
+//Location
+    var x = document.getElementById("demo");
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+    
+    function showPosition(position) {
+      x.innerHTML = "Latitude: " + position.coords.latitude + 
+      "<br>Longitude: " + position.coords.longitude;
+    }
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
